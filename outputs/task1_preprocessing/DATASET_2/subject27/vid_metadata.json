@@ -1,0 +1,85 @@
+{
+  "schema_version": "task1_roi_v1",
+  "video": {
+    "path": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject27\\vid.avi",
+    "fps": 23.36482,
+    "frame_count": 1431,
+    "width": 640,
+    "height": 480,
+    "duration_seconds": 61.24592442826437
+  },
+  "config": {
+    "target_fps": null,
+    "resize_width": 640,
+    "max_frames": null,
+    "save_overlay_video": false,
+    "overlay_sample_count": 8,
+    "min_roi_area_px": 100.0,
+    "schema_version": "task1_roi_v1"
+  },
+  "roi_names": [
+    "forehead",
+    "left_cheek",
+    "right_cheek"
+  ],
+  "roi_landmarks": {
+    "forehead": [
+      109,
+      10,
+      338,
+      337,
+      336,
+      296,
+      334,
+      293,
+      300,
+      70,
+      63,
+      105,
+      66,
+      107
+    ],
+    "left_cheek": [
+      50,
+      101,
+      118,
+      119,
+      100,
+      47,
+      126,
+      209,
+      49,
+      203,
+      205,
+      187
+    ],
+    "right_cheek": [
+      280,
+      330,
+      347,
+      348,
+      329,
+      277,
+      355,
+      429,
+      279,
+      423,
+      425,
+      411
+    ]
+  },
+  "processed_frame_count": 1431,
+  "valid_frame_count": 1431,
+  "invalid_frame_count": 0,
+  "failure_counts": {},
+  "overlay_samples": [
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_000.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_001.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_002.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_003.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_004.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_005.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_006.png",
+    "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples\\overlay_007.png"
+  ]
+}

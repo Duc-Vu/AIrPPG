@@ -1,0 +1,465 @@
+{
+  "dataset_root": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET",
+  "output_root": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing",
+  "config": {
+    "target_fps": null,
+    "resize_width": 640,
+    "max_frames": null,
+    "save_overlay_video": false,
+    "overlay_sample_count": 8,
+    "min_roi_area_px": 100.0,
+    "schema_version": "task1_roi_v1"
+  },
+  "batch_config": {
+    "process_all_videos": true,
+    "batch_max_videos": null,
+    "skip_existing": true
+  },
+  "total_discovered_videos": 49,
+  "selected_video_count": 49,
+  "processed_count": 48,
+  "skipped_existing_count": 1,
+  "failed_count": 0,
+  "results": [
+    {
+      "split": "DATASET_1",
+      "subject": "10-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\10-gt\\vid.avi",
+      "status": "skipped_existing",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\10-gt\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\10-gt\\vid_metadata.json"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "11-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\11-gt\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\11-gt\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\11-gt\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\11-gt\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "12-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\12-gt\\vid-040.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\12-gt\\vid-040_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\12-gt\\vid-040_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\12-gt\\vid-040_overlay_samples"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "5-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\5-gt\\vid-049.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\5-gt\\vid-049_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\5-gt\\vid-049_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\5-gt\\vid-049_overlay_samples"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "6-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\6-gt\\vid-045.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\6-gt\\vid-045_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\6-gt\\vid-045_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\6-gt\\vid-045_overlay_samples"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "7-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\7-gt\\vid-042.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\7-gt\\vid-042_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\7-gt\\vid-042_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\7-gt\\vid-042_overlay_samples"
+    },
+    {
+      "split": "DATASET_1",
+      "subject": "8-gt",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\8-gt\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\8-gt\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\8-gt\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_1\\8-gt\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject1",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject1\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject1\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject1\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject1\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject10",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject10\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject10\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject10\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject10\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject11",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject11\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject11\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject11\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject11\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject12",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject12\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject12\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject12\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject12\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject13",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject13\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject13\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject13\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject13\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject14",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject14\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject14\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject14\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject14\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject15",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject15\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject15\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject15\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject15\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject16",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject16\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject16\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject16\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject16\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject17",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject17\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject17\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject17\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject17\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject18",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject18\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject18\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject18\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject18\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject20",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject20\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject20\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject20\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject20\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject22",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject22\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject22\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject22\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject22\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject23",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject23\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject23\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject23\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject23\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject24",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject24\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject24\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject24\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject24\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject25",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject25\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject25\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject25\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject25\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject26",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject26\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject26\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject26\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject26\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject27",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject27\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject27\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject3",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject3\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject3\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject3\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject3\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject30",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject30\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject30\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject30\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject30\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject31",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject31\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject31\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject31\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject31\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject32",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject32\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject32\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject32\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject32\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject33",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject33\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject33\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject33\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject33\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject34",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject34\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject34\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject34\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject34\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject35",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject35\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject35\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject35\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject35\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject36",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject36\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject36\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject36\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject36\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject37",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject37\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject37\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject37\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject37\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject38",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject38\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject38\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject38\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject38\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject39",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject39\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject39\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject39\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject39\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject4",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject4\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject4\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject4\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject4\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject40",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject40\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject40\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject40\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject40\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject41",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject41\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject41\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject41\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject41\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject42",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject42\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject42\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject42\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject42\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject43",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject43\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject43\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject43\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject43\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject44",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject44\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject44\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject44\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject44\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject45",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject45\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject45\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject45\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject45\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject46",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject46\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject46\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject46\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject46\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject47",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject47\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject47\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject47\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject47\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject48",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject48\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject48\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject48\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject48\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject49",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject49\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject49\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject49\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject49\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject5",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject5\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject5\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject5\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject5\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject8",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject8\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject8\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject8\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject8\\vid_overlay_samples"
+    },
+    {
+      "split": "DATASET_2",
+      "subject": "subject9",
+      "video": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_2\\subject9\\vid.avi",
+      "status": "processed",
+      "arrays": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject9\\vid_roi_data.npz",
+      "metadata": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject9\\vid_metadata.json",
+      "overlay_dir": "D:\\Workspace\\FPTspace\\K\u1ef3 5\\DSR\\lightweight_rppg\\outputs\\task1_preprocessing\\DATASET_2\\subject9\\vid_overlay_samples"
+    }
+  ]
+}
