@@ -1,0 +1,28 @@
+[project]
+name = "airppg"
+version = "0.1.0"
+description = "Lightweight multi-ROI rPPG experiments for webcam videos."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.9.0",
+    "mediapipe==0.10.14",
+    "numpy>=1.26.0",
+    "opencv-python>=4.10.0",
+    "pandas>=2.2.0",
+    "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
