@@ -1,48 +1,63 @@
 # AIrPPG
 
-Lightweight multi-ROI rPPG experiments for heart-rate estimation from webcam/RGB face videos.
+AIrPPG là dự án thực nghiệm rPPG đa ROI để ước lượng nhịp tim từ video RGB khuôn mặt. Pipeline hiện tại gồm:
 
-The current implementation focus is **Task 1: video preprocessing with MediaPipe Face Mesh landmark tracking and ROI extraction**. The generated Task 1 artifacts are the input for Task 2 signal extraction.
+- **Task 1**: tiền xử lý video, phát hiện landmark khuôn mặt, tạo ROI/mask và chuẩn hóa ground truth.
+- **Task 2**: trích xuất tín hiệu RGB/rPPG từ output Task 1, chạy baseline Green/CHROM/POS, so sánh với ground truth và xuất artifact chuẩn cho Task 3.
+- **Task 3**: multi-ROI fusion, so sánh single ROI, average fusion và quality-weighted fusion để kiểm tra lợi ích của việc dùng nhiều vùng khuôn mặt.
 
-## 1. Install `uv`
+Dataset chính: **UBFC-rPPG**. Dataset không được commit vào repository.
 
-This project uses Python 3.11 and [`uv`](https://docs.astral.sh/uv/) for environment management.
+---
 
-On Windows PowerShell:
+## 1. Cài đặt môi trường bằng `uv`
+
+Dự án dùng **Python 3.11** và [`uv`](https://docs.astral.sh/uv/) để quản lý môi trường.
+
+### Cài `uv` trên Windows PowerShell
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-Restart the terminal after installation, then verify:
+Sau khi cài xong, mở lại terminal và kiểm tra:
 
 ```powershell
 uv --version
 ```
 
-## 2. Set up the project environment
+### Cài dependency của dự án
 
-From the repository root:
+Từ thư mục gốc repository:
 
 ```powershell
 uv sync
 ```
 
-Start Jupyter Lab:
+Nếu cần chạy test/dev tools:
+
+```powershell
+uv sync --extra dev
+```
+
+### Mở Jupyter Lab
 
 ```powershell
 uv run jupyter lab
 ```
 
-Open:
+Notebook chính:
 
 ```text
 notebooks/task1_video_preprocessing.ipynb
+notebooks/task2_signal_extraction.ipynb
 ```
 
-## 3. Dataset layout
+---
 
-Dataset files are not committed to git. Put the local UBFC dataset under:
+## 2. Dataset UBFC-rPPG
+
+Đặt dataset cục bộ dưới thư mục:
 
 ```text
 datasets/UBFC_DATASET/
@@ -50,165 +65,570 @@ datasets/UBFC_DATASET/
     10-gt/
       vid.avi
       gtdump.xmp
+    11-gt/
+      vid.avi
+      gtdump.xmp
     ...
   DATASET_2/
     subject1/
       vid.avi
       ground_truth.txt
+    subject2/
+      vid.avi
+      ground_truth.txt
     ...
 ```
 
-The notebook discovers videos recursively under `datasets/UBFC_DATASET` by default.
+Các file dataset, frame trích xuất, video overlay và artifact trung gian nằm trong `datasets/` hoặc `outputs/` và không nên commit vào git.
 
-You can override the dataset path without editing code:
+---
 
-```powershell
-$env:DATASET_ROOT="D:/path/to/UBFC_DATASET"
+## 3. Task 1 - Video preprocessing và ROI extraction
+
+### Mục tiêu
+
+Task 1 nhận video RGB khuôn mặt, sau đó:
+
+1. Đọc metadata video: FPS, số frame, độ phân giải, duration.
+2. Tùy chọn resize video frame để giảm chi phí xử lý.
+3. Phát hiện Face Mesh landmarks bằng MediaPipe.
+4. Tạo 3 ROI chính:
+   - `forehead`
+   - `left_cheek`
+   - `right_cheek`
+5. Tạo polygon và binary mask cho từng ROI trên từng frame.
+6. Giữ nguyên timeline video: frame lỗi không bị drop.
+7. Với frame detect lỗi, ghi `valid = False` và lưu `error_reasons`.
+8. Chuẩn hóa ground truth từ UBFC thành `ground_truth.npz`.
+9. Xuất overlay PNG để kiểm tra trực quan ROI.
+
+### Chạy Task 1
+
+Mở notebook:
+
+```text
+notebooks/task1_video_preprocessing.ipynb
 ```
 
-## 4. Run Task 1 for one video
-
-Use the first discovered dataset video:
-
-```powershell
-uv run jupyter lab
-```
-
-Or choose a specific video:
-
-```powershell
-$env:VIDEO_PATH="D:/path/to/UBFC_DATASET/DATASET_2/subject1/vid.avi"
-uv run jupyter lab
-```
-
-Task 1 runs full video by default. For a quick debug run only:
-
-```powershell
-$env:MAX_FRAMES="300"
-$env:RESIZE_WIDTH="320"
-$env:OVERLAY_SAMPLE_COUNT="4"
-uv run jupyter lab
-```
-
-To return to full-video processing:
-
-```powershell
-$env:MAX_FRAMES="None"
-```
-
-## 5. Run Task 1 for the full dataset
-
-Batch mode processes every discovered video and mirrors the dataset split structure in `outputs/`:
-
-```powershell
-$env:PROCESS_ALL_VIDEOS="1"
-$env:MAX_FRAMES="None"
-uv run jupyter lab
-```
-
-For a small batch smoke test:
-
-```powershell
-$env:PROCESS_ALL_VIDEOS="1"
-$env:BATCH_MAX_VIDEOS="2"
-$env:MAX_FRAMES="30"
-uv run jupyter lab
-```
-
-Useful environment variables:
-
-| Variable | Default | Meaning |
-| --- | --- | --- |
-| `DATASET_ROOT` | `datasets/UBFC_DATASET` | Root folder scanned for videos. |
-| `VIDEO_PATH` | first discovered video | Single video to process. |
-| `PROCESS_ALL_VIDEOS` | `0` | Set to `1` to process all videos. |
-| `BATCH_MAX_VIDEOS` | `None` | Limit number of videos in batch mode for debugging. |
-| `MAX_FRAMES` | `None` | Limit frames per video for debugging. `None` means full video. |
-| `RESIZE_WIDTH` | `640` | Resize width while preserving aspect ratio. |
-| `TARGET_FPS` | `None` | Optional FPS downsampling. |
-| `OVERLAY_SAMPLE_COUNT` | `8` | Number of PNG ROI overlay samples to save. |
-| `SAVE_OVERLAY_VIDEO` | `0` | Set to `1` to save overlay MP4. |
-| `SKIP_EXISTING` | `1` | Batch mode skips videos whose `.npz` and `.json` already exist. |
-
-## 6. Task 1 outputs
-
-Single-video and batch outputs are written under:
+Chạy toàn bộ notebook để tạo artifact trong:
 
 ```text
 outputs/task1_preprocessing/
 ```
 
-Batch mode mirrors the dataset split:
+### Output hiện tại của Task 1
+
+Task 1 dùng manifest làm entrypoint:
+
+```text
+outputs/task1_preprocessing/task1_dataset_manifest.json
+```
+
+Layout chuẩn:
 
 ```text
 outputs/task1_preprocessing/
-  DATASET_1/
-    10-gt/
-      vid_roi_data.npz
-      vid_metadata.json
-      vid_overlay_samples/
-        overlay_000.png
-        ...
-  DATASET_2/
-    subject1/
-      vid_roi_data.npz
-      vid_metadata.json
-      vid_overlay_samples/
-        overlay_000.png
-        ...
   task1_dataset_manifest.json
+  train/
+    <sample_id>/
+      roi_data.npz
+      metadata.json
+      ground_truth.npz
+      overlay_samples/
+        overlay_000.png
+        ...
+  val/
+    <sample_id>/
+      roi_data.npz
+      metadata.json
+      ground_truth.npz
+      overlay_samples/
+        overlay_000.png
+        ...
+  test/
+    <sample_id>/
+      roi_data.npz
+      metadata.json
+      ground_truth.npz
+      overlay_samples/
+        overlay_000.png
+        ...
 ```
 
-### `.npz` arrays
+Mỗi item trong `task1_dataset_manifest.json` chứa các trường quan trọng:
 
-`*_roi_data.npz` contains:
+| Trường             | Ý nghĩa                                                                               |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| `sample_id`        | ID duy nhất của sample.                                                               |
+| `split`            | Split dữ liệu:`train`, `val`, hoặc `test`.                                     |
+| `status`           | Trạng thái xử lý, thường là `processed`.                                       |
+| `video_relpath`    | Đường dẫn tương đối tới video nguồn trong project.                            |
+| `roi_npz`          | Đường dẫn tương đối từ `outputs/task1_preprocessing/` tới `roi_data.npz`. |
+| `metadata_json`    | Đường dẫn tương đối tới `metadata.json`.                                     |
+| `ground_truth_npz` | Đường dẫn tương đối tới `ground_truth.npz`.                                  |
 
-| Array | Shape | Meaning for Task 2 |
-| --- | --- | --- |
-| `frame_indices` | `(N,)` | Original video frame indices that were processed. Use this to align with ground truth. |
-| `landmarks_px` | `(N, 478, 2)` | Face Mesh landmark coordinates in pixels. Useful for motion/jitter quality features. |
-| `roi_polygons_px` | `(N, 3, P, 2)` | Forehead, left cheek, right cheek ROI polygons in pixels. |
-| `roi_masks` | `(N, 3, H, W)` | Binary ROI masks. Use these to compute mean RGB per ROI per frame. |
-| `valid` | `(N,)` | Whether the frame has valid face landmarks and ROI masks. |
-| `error_reasons` | `(N,)` | Error reason for invalid frames, e.g. `no_face`. |
-| `roi_names` | `(3,)` | ROI axis labels: `forehead`, `left_cheek`, `right_cheek`. |
+### `roi_data.npz`
 
-### `.json` metadata
+Các mảng chính:
 
-`*_metadata.json` contains:
+| Key                 | Shape            | Ý nghĩa                                                 |
+| ------------------- | ---------------- | --------------------------------------------------------- |
+| `frame_indices`   | `(N,)`         | Index frame gốc tương ứng với từng dòng dữ liệu. |
+| `landmarks_px`    | `(N, 478, 2)`  | Face Mesh landmarks theo pixel.                           |
+| `roi_polygons_px` | `(N, 3, P, 2)` | Polygon của 3 ROI theo pixel.                            |
+| `roi_masks`       | `(N, 3, H, W)` | Binary mask của từng ROI trên từng frame.             |
+| `valid`           | `(N,)`         | Frame có landmark/ROI hợp lệ hay không.               |
+| `error_reasons`   | `(N,)`         | Lý do frame không hợp lệ.                             |
+| `roi_names`       | `(3,)`         | Tên ROI:`forehead`, `left_cheek`, `right_cheek`.   |
 
-- source video path;
-- original FPS, resolution, frame count, duration;
-- preprocessing config;
-- ROI landmark indices;
-- valid/invalid frame counts;
-- failure statistics;
-- overlay sample paths.
+### `metadata.json`
 
-## 7. Quick `.npz` inspection
+Chứa thông tin:
 
-Use the helper script:
+- `schema_version`
+- `sample_id`, `split`
+- metadata video: FPS, frame count, width, height, duration, relpath
+- cấu hình Task 1
+- danh sách ROI
+- thống kê frame hợp lệ/lỗi
+- đường dẫn overlay sample
 
-```powershell
-uv run python inspect_task1_npz.py
-```
+### `ground_truth.npz`
 
-Or pass a specific artifact:
+Ground truth được chuẩn hóa về cùng schema để Task 2 không phải parse raw UBFC nữa.
 
-```powershell
-uv run python inspect_task1_npz.py outputs/task1_preprocessing/DATASET_1/10-gt/vid_roi_data.npz
-```
+Các key chính:
 
-## 8. What Task 2 should consume
+| Key                | Ý nghĩa                                                              |
+| ------------------ | ---------------------------------------------------------------------- |
+| `timestamps`     | Mốc thời gian của nhịp tim ground truth.                           |
+| `heart_rate_bpm` | Nhịp tim ground truth theo BPM.                                       |
+| `ppg_signal`     | Tín hiệu PPG/raw pulse đã chuẩn hóa từ UBFC.                    |
+| `ppg_timestamps` | Timestamp tương ứng của `ppg_signal`.                            |
+| `spo2_percent`   | SpO2 nếu dataset cung cấp, hoặc giá trị chuẩn hóa tương ứng. |
 
-Task 2 should read the Task 1 `.npz` and source video, then compute per-ROI RGB time series:
+---
+
+## 4. Task 2 - Signal extraction, baseline rPPG và evaluation
+
+### Mục tiêu
+
+Task 2 tiêu thụ toàn bộ output của Task 1 và tạo artifact có thể dùng trực tiếp cho Task 3.
+
+Notebook chính:
 
 ```text
-forehead_R(t), forehead_G(t), forehead_B(t)
-left_cheek_R(t), left_cheek_G(t), left_cheek_B(t)
-right_cheek_R(t), right_cheek_G(t), right_cheek_B(t)
+notebooks/task2_signal_extraction.ipynb
 ```
 
-Use `roi_masks` to select pixels inside each ROI and `valid` / `error_reasons` to avoid silently using failed detections. Use `frame_indices` and video FPS from metadata to align the signal with ground truth.
+Task 2 hiện được viết self-contained trong notebook để dễ chạy và nộp báo cáo. Notebook không phụ thuộc config môi trường; các tham số được chỉnh trực tiếp trong cell config.
 
-Generated data should stay under ignored local folders such as `outputs/`, `artifacts/`, or `datasets/`.
+### Luồng xử lý
+
+1. Đọc `outputs/task1_preprocessing/task1_dataset_manifest.json`.
+2. Lấy tất cả item có `status = "processed"`.
+3. Với mỗi sample:
+   - đọc `roi_data.npz`
+   - đọc `metadata.json`
+   - đọc `ground_truth.npz`
+   - mở video nguồn từ `video_relpath`
+4. Dùng `roi_masks` và `valid` để trích xuất RGB trung bình theo từng ROI:
+   - forehead RGB
+   - left cheek RGB
+   - right cheek RGB
+5. Giữ nguyên số frame theo Task 1. Frame invalid được giữ lại, giá trị signal là `NaN`.
+6. Tiền xử lý signal:
+   - interpolate NaN nội bộ khi chạy baseline
+   - detrend
+   - bandpass theo khoảng HR
+   - z-score normalization
+7. Chạy 3 baseline:
+   - Green channel
+   - CHROM
+   - POS
+8. Ước lượng HR theo sliding FFT window.
+9. Align HR estimate với ground truth bằng timestamp.
+10. Tính metric:
+    - MAE BPM
+    - RMSE BPM
+    - Pearson correlation
+    - bias BPM
+    - SNR dB
+    - số window hợp lệ
+11. Lưu artifact chuẩn cho từng sample.
+12. Lưu manifest tổng và summary CSV.
+13. Hiển thị visualization mẫu trong notebook.
+
+### Config chỉnh trực tiếp trong notebook
+
+Trong cell config của `task2_signal_extraction.ipynb`:
+
+```python
+TASK1_MANIFEST_PATH = PROJECT_ROOT / "outputs/task1_preprocessing/task1_dataset_manifest.json"
+TASK2_OUTPUT_ROOT = PROJECT_ROOT / "outputs/task2_signals"
+
+PROCESS_ALL_TASK1_OUTPUTS = True
+BATCH_LIMIT = None
+MAX_FRAMES_PER_SAMPLE = None
+WINDOW_SEC = 30.0
+STEP_SEC = 1.0
+HR_MIN_BPM = 42.0
+HR_MAX_BPM = 210.0
+SAVE_FIGURES = True
+SHOW_SAMPLE_VISUALIZATION = True
+PROGRESS = True
+```
+
+Mặc định notebook xử lý toàn bộ output Task 1.
+
+### Output của Task 2
+
+Entrypoint chính cho Task 3:
+
+```text
+outputs/task2_signals/task2_dataset_manifest.json
+```
+
+Layout đầy đủ:
+
+```text
+outputs/task2_signals/
+  task2_dataset_manifest.json
+  task2_metrics_summary.csv
+  train/
+    <sample_id>/
+      signals.npz
+      metadata.json
+      metrics.json
+      metrics.csv
+      visualization.png
+  val/
+    <sample_id>/
+      signals.npz
+      metadata.json
+      metrics.json
+      metrics.csv
+      visualization.png
+  test/
+    <sample_id>/
+      signals.npz
+      metadata.json
+      metrics.json
+      metrics.csv
+      visualization.png
+```
+
+### `task2_dataset_manifest.json`
+
+Trường chính:
+
+| Trường             | Ý nghĩa                                           |
+| -------------------- | --------------------------------------------------- |
+| `schema_version`   | Version schema Task 2, hiện là `task2_rppg_v1`. |
+| `task1_manifest`   | Manifest Task 1 đã dùng làm input.              |
+| `output_root_hint` | Output root của Task 2.                            |
+| `config`           | Config chạy Task 2.                                |
+| `counts.total`     | Tổng số sample đọc từ Task 1.                  |
+| `counts.processed` | Số sample xử lý thành công.                    |
+| `counts.failed`    | Số sample lỗi.                                    |
+| `items`            | Danh sách output từng sample.                     |
+
+Mỗi item chứa:
+
+| Trường                      | Ý nghĩa                                 |
+| ----------------------------- | ----------------------------------------- |
+| `sample_id`                 | ID sample.                                |
+| `split`                     | `train`, `val`, hoặc `test`.       |
+| `status`                    | `processed` hoặc `failed`.           |
+| `outputs.signals_npz`       | Đường dẫn tới `signals.npz`.       |
+| `outputs.metrics_json`      | Đường dẫn tới `metrics.json`.      |
+| `outputs.metrics_csv`       | Đường dẫn tới `metrics.csv`.       |
+| `outputs.metadata_json`     | Đường dẫn tới `metadata.json`.     |
+| `outputs.visualization_png` | Đường dẫn tới `visualization.png`. |
+| `frame_count`               | Số frame trong signal output.            |
+| `valid_frame_count`         | Số frame hợp lệ từ Task 1.            |
+| `hr_window_count`           | Số window HR estimate.                   |
+| `metrics`                   | Metric của Green/CHROM/POS.              |
+
+### `signals.npz`
+
+Đây là artifact quan trọng nhất cho Task 3.
+
+| Key                   | Shape         | Ý nghĩa                                          |
+| --------------------- | ------------- | -------------------------------------------------- |
+| `schema_version`    | scalar        | Version schema Task 2.                             |
+| `sample_id`         | scalar        | ID sample.                                         |
+| `split`             | scalar        | Split dữ liệu.                                   |
+| `frame_indices`     | `(N,)`      | Frame index gốc từ video.                        |
+| `timestamps`        | `(N,)`      | Timestamp theo giây của từng frame.             |
+| `valid`             | `(N,)`      | Frame hợp lệ từ Task 1.                         |
+| `roi_names`         | `(3,)`      | Tên ROI.                                          |
+| `method_names`      | `(3,)`      | `green`, `chrom`, `pos`.                     |
+| `mean_rgb`          | `(N, 3, 3)` | RGB trung bình theo frame, ROI, channel.          |
+| `rppg_signals`      | `(N, 3)`    | Signal rPPG tổng hợp theo từng method.          |
+| `rppg_roi_signals`  | `(3, N, 3)` | Signal theo method, frame, ROI.                    |
+| `hr_timestamps`     | `(W,)`      | Timestamp tâm của từng HR window.               |
+| `hr_estimates`      | `(W, 3)`    | HR estimate theo window và method.                |
+| `gt_timestamps`     | `(G,)`      | Timestamp gốc của HR ground truth.               |
+| `gt_heart_rate_bpm` | `(G,)`      | HR ground truth gốc.                              |
+| `gt_aligned_to_hr`  | `(W,)`      | Ground truth HR đã align với `hr_timestamps`. |
+| `ppg_timestamps`    | `(P,)`      | Timestamp của PPG signal.                         |
+| `ppg_signal`        | `(P,)`      | PPG/raw pulse signal.                              |
+| `spo2_percent`      | `(S,)`      | SpO2 nếu có.                                     |
+
+Quy ước dimension:
+
+- `N`: số frame của sample sau Task 1.
+- `W`: số sliding window dùng để ước lượng HR.
+- `G`: số điểm HR ground truth.
+- `P`: số điểm PPG signal.
+- Method order trong `rppg_signals` và `hr_estimates` lấy từ `method_names`.
+- ROI order trong `mean_rgb` và `rppg_roi_signals` lấy từ `roi_names`.
+
+### `metadata.json`
+
+Metadata từng sample gồm:
+
+- schema version
+- sample ID, split
+- input Task 1 đã dùng
+- config Task 2
+- ROI names
+- method names
+- frame count
+- valid frame count
+- HR window count
+- metrics theo method
+
+### `metrics.json` và `metrics.csv`
+
+Lưu metric per method:
+
+| Metric        | Ý nghĩa                                               |
+| ------------- | ------------------------------------------------------- |
+| `mae_bpm`   | Mean Absolute Error giữa HR estimate và GT.           |
+| `rmse_bpm`  | Root Mean Square Error.                                 |
+| `pearson_r` | Tương quan Pearson giữa estimate và GT.             |
+| `bias_bpm`  | Sai lệch trung bình `estimate - GT`.                |
+| `snr_db`    | Signal-to-noise ratio quanh tần số HR tham chiếu.    |
+| `n_windows` | Số HR window hợp lệ được dùng để tính metric. |
+
+### `visualization.png`
+
+Mỗi sample có một figure tổng hợp gồm:
+
+1. RGB trace của forehead ROI.
+2. rPPG signal của Green/CHROM/POS trong đoạn đầu.
+3. Spectrum chuẩn hóa và GT mean HR.
+4. HR estimate so với ground truth theo thời gian.
+5. Bar chart metric MAE/RMSE/SNR.
+
+---
+
+## 5. Task 3 - Multi-ROI fusion
+
+Task 3 tập trung vào **fusion đa ROI**: kiểm tra việc kết hợp trán, má trái và má phải có cải thiện kết quả so với từng ROI riêng lẻ hay không.
+
+Task 3 nên dùng output Task 2 làm entrypoint:
+
+```text
+outputs/task2_signals/task2_dataset_manifest.json
+```
+
+### Mục tiêu Task 3
+
+So sánh các chiến lược:
+
+1. **Single-ROI baseline**
+
+   - Dùng từng ROI riêng lẻ: `forehead`, `left_cheek`, `right_cheek`.
+   - Ước lượng HR riêng cho từng ROI.
+   - Đánh giá ROI nào ổn định hơn theo từng sample/window.
+2. **Average fusion**
+
+   - Gộp tín hiệu ROI bằng trung bình đơn giản.
+   - Đây là baseline fusion dễ hiểu, không cần quality score.
+3. **Quality-weighted fusion**
+
+   - Tính quality score cho từng ROI/window.
+   - Gán trọng số cao hơn cho ROI có tín hiệu tốt hơn.
+   - Chuẩn hóa trọng số để tổng weight của các ROI bằng 1.
+
+Task 3 cần trả lời:
+
+- Multi-ROI fusion có tốt hơn single ROI không?
+- Average fusion có đủ tốt không, hay cần quality-weighted fusion?
+- ROI nào thường đáng tin nhất trên UBFC?
+- Khi một ROI bị nhiễu, bị che hoặc ánh sáng kém, fusion có giảm lỗi không?
+- Quality features nào tương quan tốt với lỗi HR thực tế?
+
+### Input Task 3
+
+Task 3 đọc từ mỗi `signals.npz` của Task 2:
+
+| Input                | Cách dùng                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| `rppg_roi_signals` | Input chính cho fusion. Shape `(3, N, 3)` tương ứng `(method, frame, roi)`. |
+| `roi_names`        | Thứ tự ROI, ví dụ `forehead`, `left_cheek`, `right_cheek`.                |
+| `method_names`     | Thứ tự method, ví dụ `green`, `chrom`, `pos`.                             |
+| `timestamps`       | Timeline frame-level.                                                               |
+| `valid`            | Mask frame hợp lệ từ Task 1.                                                     |
+| `hr_timestamps`    | Timeline window-level cho HR estimate.                                              |
+| `gt_aligned_to_hr` | Ground truth HR đã align theo `hr_timestamps`.                                  |
+| `hr_estimates`     | HR estimate baseline tổng hợp từ Task 2, dùng để so sánh.                    |
+| `mean_rgb`         | Có thể dùng để tính motion/color quality bổ sung nếu cần.                  |
+
+Task 3 không cần đọc raw video hoặc raw UBFC ground truth nếu Task 2 đã chạy đúng.
+
+### Quality features đề xuất
+
+Mỗi ROI/window nên có một vector quality features. Các feature nên tính được trực tiếp từ signal Task 2:
+
+| Feature                    | Ý nghĩa                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------- |
+| `snr_db`                 | Tỷ lệ năng lượng quanh tần số HR so với noise band.                       |
+| `peak_clarity`           | Độ rõ của peak chính trong phổ so với peak phụ/noise floor.               |
+| `peak_stability`         | Độ ổn định của dominant frequency giữa các window gần nhau.              |
+| `signal_std`             | Biên độ dao động sau preprocessing; quá thấp có thể là tín hiệu yếu. |
+| `valid_ratio`            | Tỷ lệ frame hợp lệ trong window.                                              |
+| `inter_roi_disagreement` | Mức lệch HR giữa ROI hiện tại và các ROI còn lại.                        |
+| `landmark_jitter`        | Nếu dùng thêm Task 1 landmarks, đo độ rung/chuyển động ROI.              |
+
+Quality score ban đầu có thể là rule-based, ví dụ:
+
+```text
+quality = a * normalized_snr
+        + b * peak_clarity
+        + c * valid_ratio
+        - d * inter_roi_disagreement
+        - e * landmark_jitter
+```
+
+Sau đó chuyển quality thành weight:
+
+```text
+weight_roi = quality_roi / sum(quality_all_rois)
+```
+
+Cần xử lý edge case:
+
+- Nếu toàn bộ quality không hợp lệ, fallback về average fusion.
+- Nếu một ROI có `valid_ratio` quá thấp, weight của ROI đó nên về 0.
+- Weight phải hữu hạn, không âm, và tổng bằng 1 theo từng window.
+
+### Output Task 3 đề xuất
+
+```text
+outputs/task3_fusion/
+  task3_fusion_manifest.json
+  task3_fusion_metrics_summary.csv
+  train/
+    <sample_id>/
+      fusion_signals.npz
+      fusion_metrics.json
+      fusion_metrics.csv
+      fusion_visualization.png
+  val/
+    <sample_id>/
+      fusion_signals.npz
+      fusion_metrics.json
+      fusion_metrics.csv
+      fusion_visualization.png
+  test/
+    <sample_id>/
+      fusion_signals.npz
+      fusion_metrics.json
+      fusion_metrics.csv
+      fusion_visualization.png
+```
+
+### `fusion_signals.npz` đề xuất
+
+| Key                      | Shape                          | Ý nghĩa                                                                              |
+| ------------------------ | ------------------------------ | -------------------------------------------------------------------------------------- |
+| `sample_id`            | scalar                         | ID sample.                                                                             |
+| `split`                | scalar                         | Split dữ liệu.                                                                       |
+| `roi_names`            | `(3,)`                       | Thứ tự ROI.                                                                          |
+| `method_names`         | `(3,)`                       | Thứ tự baseline method.                                                              |
+| `hr_timestamps`        | `(W,)`                       | Timeline window-level.                                                                 |
+| `gt_aligned_to_hr`     | `(W,)`                       | Ground truth HR theo window.                                                           |
+| `single_roi_hr`        | `(W, 3, 3)`                  | HR theo `(window, method, roi)`.                                                     |
+| `average_fusion_hr`    | `(W, 3)`                     | HR sau average fusion theo method.                                                     |
+| `weighted_fusion_hr`   | `(W, 3)`                     | HR sau quality-weighted fusion theo method.                                            |
+| `roi_quality_features` | `(W, 3, F)`                  | Quality features theo window/ROI.                                                      |
+| `roi_weights`          | `(W, 3)` hoặc `(W, 3, 3)` | Weight ROI theo window; nếu weight riêng từng method thì dùng thêm trục method. |
+| `fused_rppg_signals`   | `(N, 3)`                     | Fused rPPG signal theo method, nếu lưu ở frame-level.                               |
+
+### Metrics cần báo cáo
+
+Task 3 phải so sánh tối thiểu:
+
+- single ROI `forehead`
+- single ROI `left_cheek`
+- single ROI `right_cheek`
+- average fusion
+- quality-weighted fusion
+- baseline tổng hợp Task 2 nếu cần đối chiếu
+
+Metric:
+
+- MAE BPM
+- RMSE BPM
+- Pearson correlation
+- bias BPM
+- SNR dB nếu có fused signal
+
+Nên báo cáo theo:
+
+- từng sample
+- từng split
+- tổng hợp riêng trên `test`
+
+### Visualization cần có
+
+Mỗi sample hoặc một nhóm sample đại diện nên có:
+
+- HR theo từng ROI so với ground truth.
+- HR của average fusion và weighted fusion so với ground truth.
+- Weight của từng ROI theo thời gian/window.
+- Quality features theo thời gian/window.
+- Bar chart metric so sánh single ROI vs fusion.
+
+### Tiêu chí hoàn thành Task 3
+
+Task 3 chỉ nên xem là hoàn thành khi:
+
+- Đọc được `outputs/task2_signals/task2_dataset_manifest.json`.
+- Load được `rppg_roi_signals`, `hr_timestamps`, `gt_aligned_to_hr`, `roi_names`, `method_names`.
+- Tính được HR riêng cho từng ROI hoặc dùng được ROI-level signal để tạo HR theo ROI/window.
+- Có average fusion.
+- Có quality-weighted fusion với weight hữu hạn, không âm, tổng bằng 1.
+- Có xử lý fallback khi quality score không hợp lệ.
+- So sánh single ROI vs average fusion vs quality-weighted fusion.
+- Xuất manifest, `.npz`, metrics `.json/.csv` và visualization.
+- Có kết quả tổng hợp trên `test` split.
+
+---
+
+## 6. Kiểm tra nhanh artifact hiện tại
+
+Sau khi chạy Task 2, có thể kiểm tra manifest:
+
+```powershell
+uv run python -c "import json; from pathlib import Path; p=Path('outputs/task2_signals/task2_dataset_manifest.json'); m=json.loads(p.read_text(encoding='utf-8')); print(m['counts'])"
+```
+
+Kiểm tra shape của một sample:
+
+```powershell
+uv run python -c "import json, numpy as np; from pathlib import Path; root=Path('outputs/task2_signals'); m=json.loads((root/'task2_dataset_manifest.json').read_text(encoding='utf-8')); item=m['items'][0]; data=np.load(root/item['outputs']['signals_npz']); print(data['mean_rgb'].shape, data['rppg_signals'].shape, data['hr_estimates'].shape)"
+```
+
+---
+
+## 7. Ghi chú vận hành
+
+- Không commit dataset hoặc output lớn.
+- Không hardcode đường dẫn máy cá nhân vào notebook/script commit lên repo.
+- Task 1 và Task 2 phải giữ path tương đối trong manifest để dễ chuyển máy.
+- Nếu thay đổi schema output, cần tăng `schema_version` và cập nhật README tương ứng.

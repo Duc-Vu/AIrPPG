@@ -1,0 +1,65 @@
+{
+  "schema_version": "task2_rppg_v1",
+  "sample_id": "ubfc_d2_subject47_vid_ac0494f0",
+  "split": "train",
+  "source_task1_schema_version": "task1_roi_v1",
+  "inputs": {
+    "task1_manifest": "outputs/task1_preprocessing/task1_dataset_manifest.json",
+    "roi_npz": "train/ubfc_d2_subject47_vid_ac0494f0/roi_data.npz",
+    "metadata_json": "train/ubfc_d2_subject47_vid_ac0494f0/metadata.json",
+    "ground_truth_npz": "train/ubfc_d2_subject47_vid_ac0494f0/ground_truth.npz",
+    "video_relpath": "datasets/UBFC_DATASET/DATASET_2/subject47/vid.avi"
+  },
+  "config": {
+    "schema_version": "task2_rppg_v1",
+    "task1_manifest_path": "outputs/task1_preprocessing/task1_dataset_manifest.json",
+    "task2_output_root": "outputs/task2_signals",
+    "process_all_task1_outputs": true,
+    "batch_limit": null,
+    "max_frames_per_sample": null,
+    "window_sec": 30.0,
+    "step_sec": 1.0,
+    "hr_min_bpm": 42.0,
+    "hr_max_bpm": 210.0,
+    "save_figures": true
+  },
+  "roi_names": [
+    "forehead",
+    "left_cheek",
+    "right_cheek"
+  ],
+  "method_names": [
+    "green",
+    "chrom",
+    "pos"
+  ],
+  "frame_count": 2023,
+  "valid_frame_count": 2023,
+  "hr_window_count": 38,
+  "metrics": {
+    "green": {
+      "mae_bpm": 5.953004401307028,
+      "rmse_bpm": 10.102517718863021,
+      "pearson_r": -0.11209436448429333,
+      "bias_bpm": -3.837609717110803,
+      "snr_db": -0.8041889684123167,
+      "n_windows": 38
+    },
+    "chrom": {
+      "mae_bpm": 64.65889657110185,
+      "rmse_bpm": 64.87236611863008,
+      "pearson_r": 0.41720726675310377,
+      "bias_bpm": -64.65889657110185,
+      "snr_db": -15.69018996332126,
+      "n_windows": 38
+    },
+    "pos": {
+      "mae_bpm": 6.479103957677813,
+      "rmse_bpm": 10.710148744405306,
+      "pearson_r": -0.19829102377542718,
+      "bias_bpm": -4.36374541271884,
+      "snr_db": 1.0367903126163578,
+      "n_windows": 38
+    }
+  }
+}

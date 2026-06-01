@@ -12,12 +12,14 @@ dependencies = [
     "numpy>=1.26.0",
     "opencv-python>=4.10.0",
     "pandas>=2.2.0",
+    "scipy>=1.13.0",
     "tqdm>=4.66.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.8.0",
+    "pytest>=8.0.0",
 ]
 
 [tool.uv]
