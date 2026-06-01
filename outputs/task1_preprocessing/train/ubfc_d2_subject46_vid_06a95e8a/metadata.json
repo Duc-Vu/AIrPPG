@@ -1,0 +1,126 @@
+{
+  "schema_version": "task1_roi_v1",
+  "sample_id": "ubfc_d2_subject46_vid_06a95e8a",
+  "split": "train",
+  "dataset": {
+    "name": "UBFC-rPPG",
+    "root_hint": "datasets/UBFC_DATASET",
+    "readme_relpath": "datasets/UBFC_DATASET/readme.txt",
+    "source_dataset_split": "DATASET_2",
+    "subject": "subject46"
+  },
+  "video": {
+    "fps": 29.245634,
+    "frame_count": 1991,
+    "width": 640,
+    "height": 480,
+    "duration_seconds": 68.0785378084127,
+    "relpath": "datasets/UBFC_DATASET/DATASET_2/subject46/vid.avi"
+  },
+  "config": {
+    "target_fps": null,
+    "resize_width": 640,
+    "max_frames": null,
+    "save_overlay_video": false,
+    "overlay_sample_count": 8,
+    "min_roi_area_px": 100.0,
+    "schema_version": "task1_roi_v1"
+  },
+  "roi_names": [
+    "forehead",
+    "left_cheek",
+    "right_cheek"
+  ],
+  "roi_landmarks": {
+    "forehead": [
+      109,
+      10,
+      338,
+      337,
+      336,
+      296,
+      334,
+      293,
+      300,
+      70,
+      63,
+      105,
+      66,
+      107
+    ],
+    "left_cheek": [
+      50,
+      101,
+      118,
+      119,
+      100,
+      47,
+      126,
+      209,
+      49,
+      203,
+      205,
+      187
+    ],
+    "right_cheek": [
+      280,
+      330,
+      347,
+      348,
+      329,
+      277,
+      355,
+      429,
+      279,
+      423,
+      425,
+      411
+    ]
+  },
+  "processed_frame_count": 1991,
+  "valid_frame_count": 1991,
+  "invalid_frame_count": 0,
+  "failure_counts": {},
+  "overlay_samples": [
+    "overlay_samples/overlay_000.png",
+    "overlay_samples/overlay_001.png",
+    "overlay_samples/overlay_002.png",
+    "overlay_samples/overlay_003.png",
+    "overlay_samples/overlay_004.png",
+    "overlay_samples/overlay_005.png",
+    "overlay_samples/overlay_006.png",
+    "overlay_samples/overlay_007.png"
+  ],
+  "artifacts": {
+    "roi_npz": "roi_data.npz",
+    "metadata_json": "metadata.json",
+    "ground_truth_npz": "ground_truth.npz",
+    "overlay_dir": "overlay_samples"
+  },
+  "ground_truth": {
+    "available": true,
+    "schema_version": "task1_ground_truth_v1",
+    "source_format": "ubfc_dataset_2_ground_truth_txt",
+    "units": {
+      "timestamps": "seconds",
+      "heart_rate_bpm": "beats_per_minute",
+      "ppg_signal": "arbitrary_unit",
+      "ppg_timestamps": "seconds",
+      "spo2_percent": "percent"
+    },
+    "sample_counts": {
+      "timestamps": 1991,
+      "heart_rate_bpm": 1991,
+      "ppg_signal": 1991,
+      "ppg_timestamps": 1991,
+      "spo2_percent": 1991
+    },
+    "missing_fields": [
+      "spo2_percent"
+    ],
+    "notes": [
+      "DATASET_2 ground_truth.txt lines are ppg_signal, heart_rate_bpm, timestamps_seconds; SpO2 is unavailable and stored as NaN."
+    ],
+    "source_relpath": "datasets/UBFC_DATASET/DATASET_2/subject46/ground_truth.txt"
+  }
+}
