@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task 2 Signal Extraction Report</title>
+  <link rel="stylesheet" href="report.css">
+</head>
+<body>
+  <main class="report-page">
+    <header class="report-header">
+      <p class="eyebrow">AIrPPG / Task 2</p>
+      <h1>Signal Extraction & Classical Baselines</h1>
+      <p class="muted">Báo cáo này đánh giá Green channel, CHROM và POS sau bước trích xuất tín hiệu RGB từ 3 ROI. Mỗi method dùng tín hiệu đã combine ROI bằng average, nên đây là baseline truyền thống ở mức method, không phải single-ROI.</p>
+      <div class="badge-row">
+        <span class="badge">Methods: Green / CHROM / POS</span>
+        <span class="badge">Rows: 147</span>
+        <span class="badge">Test windows: 206</span>
+        <span class="badge">Metrics: MAE / RMSE / Pearson / SNR</span>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Metric đọc như thế nào?</h2>
+      <div class="grid grid-2">
+        <div class="callout"><strong>MAE ↓</strong><br>Sai số tuyệt đối trung bình giữa HR dự đoán và ground truth. Ví dụ MAE 1.66 BPM nghĩa là trung bình lệch khoảng 1.66 nhịp/phút. Đây là metric chính vì dễ diễn giải.</div>
+        <div class="callout"><strong>RMSE ↓</strong><br>Giống MAE nhưng phạt lỗi lớn nặng hơn. Nếu RMSE cao hơn MAE nhiều, method có vài window sai rất lớn.</div>
+        <div class="callout"><strong>Pearson r ↑</strong><br>Đo xu hướng dự đoán có tăng/giảm cùng ground truth không. Gần 1 là theo trend tốt, gần 0 là gần như không theo, âm là ngược trend.</div>
+        <div class="callout"><strong>SNR ↑</strong><br>Độ mạnh của peak nhịp tim trong phổ so với nhiễu. SNR cao hơn thường tốt hơn, nhưng SNR cao không đảm bảo HR đúng nếu peak nằm sai tần số.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Kết luận nhanh</h2>
+      <div class="grid grid-3">
+        <div class="kpi"><div class="kpi-label">Best test MAE</div><div class="kpi-value">POS</div><div class="kpi-note">MAE 1.66 BPM, RMSE 2.12 BPM. Đây là baseline mạnh nhất ở test split.</div></div>
+        <div class="kpi"><div class="kpi-label">Green</div><div class="kpi-value">Khá</div><div class="kpi-note">Test MAE 10.24 BPM. Có ích nhưng kém POS rõ rệt, đặc biệt khi ánh sáng/motion làm kênh xanh nhiễu.</div></div>
+        <div class="kpi"><div class="kpi-label">CHROM</div><div class="kpi-value">Yếu</div><div class="kpi-note">Test MAE 48.66 BPM, Pearson âm. Với protocol hiện tại CHROM không phải baseline đáng tin.</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Test split</h2>
+      <figure class="figure">
+        <img src="assets/task2_test_baselines.png" alt="Task 2 test baseline chart">
+        <figcaption><strong>Diễn giải:</strong> POS thắng ở MAE và RMSE: lỗi nhỏ nhất và ít lỗi lớn hơn Green/CHROM. Green có Pearson test cao hơn POS trong một số aggregate, nghĩa là trend còn theo được ground truth, nhưng độ lệch tuyệt đối lớn hơn. CHROM vừa MAE/RMSE cao vừa Pearson thấp/âm, cho thấy dự đoán thường lệch xa và không theo biến động HR thật.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>MAE theo split</h2>
+      <figure class="figure">
+        <img src="assets/task2_mae_by_split.png" alt="Task 2 MAE by split">
+        <figcaption><strong>Diễn giải:</strong> POS ổn định nhất qua train/val/test, Green dao động nhiều hơn, CHROM luôn lỗi cao. Điều này gợi ý pipeline hiện tại phù hợp hơn với POS/Green; CHROM có thể bị ảnh hưởng bởi normalization, windowing hoặc điều kiện UBFC trong split này.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>Bảng tổng hợp</h2>
+      <div class="grid grid-3">
+        <div><h3>Train</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>Samples</th><th>Windows</th></tr></thead><tbody><tr><td>Green</td><td>9.29</td><td>12.49</td><td>0.304</td><td>-2.68</td><td>39</td><td>1468</td></tr><tr><td>CHROM</td><td>46.79</td><td>47.76</td><td>-0.003</td><td>-11.84</td><td>39</td><td>1468</td></tr><tr class="highlight"><td>POS</td><td>7.14</td><td>9.50</td><td>0.391</td><td>0.36</td><td>39</td><td>1468</td></tr></tbody></table></div></div>
+        <div><h3>Val</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>Samples</th><th>Windows</th></tr></thead><tbody><tr class="highlight"><td>Green</td><td>12.15</td><td>17.64</td><td>0.501</td><td>-6.74</td><td>4</td><td>186</td></tr><tr><td>CHROM</td><td>43.44</td><td>44.33</td><td>0.066</td><td>-12.92</td><td>4</td><td>186</td></tr><tr><td>POS</td><td>13.93</td><td>20.42</td><td>0.291</td><td>-5.80</td><td>4</td><td>186</td></tr></tbody></table></div></div>
+        <div><h3>Test</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>Samples</th><th>Windows</th></tr></thead><tbody><tr><td>Green</td><td>10.24</td><td>12.09</td><td>0.519</td><td>-2.48</td><td>6</td><td>206</td></tr><tr><td>CHROM</td><td>48.66</td><td>48.81</td><td>-0.284</td><td>-12.49</td><td>6</td><td>206</td></tr><tr class="highlight"><td>POS</td><td>1.66</td><td>2.12</td><td>0.467</td><td>2.06</td><td>6</td><td>206</td></tr></tbody></table></div></div>
+      </div>
+      <p class="small muted" style="margin-top:12px">Ô xanh là MAE tốt nhất trong split. Test split mới là phần chính để nhận xét generalization trong batch hiện tại.</p>
+    </section>
+
+    <section class="card">
+      <h2>Phương pháp và nguyên nhân khả dĩ</h2>
+      <div class="grid grid-3">
+        <div class="callout"><strong>Green channel</strong><br>Dựa vào kênh G vì hấp thụ máu thường rõ ở vùng xanh lá. Nhanh và đơn giản, nhưng dễ nhiễu bởi ánh sáng và motion.</div>
+        <div class="callout warn"><strong>CHROM</strong><br>Dùng chrominance projection để khử nhiễu màu da. Kết quả hiện tại rất kém, nên cần xem lại sensitivity với preprocessing/window hoặc dataset split trước khi dùng làm kết luận mạnh.</div>
+        <div class="callout good"><strong>POS</strong><br>Chiếu tín hiệu lên mặt phẳng trực giao với skin tone. Kết quả test tốt nhất cho thấy POS đang là classical baseline đáng tin nhất trong repo hiện tại.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Đối chiếu proposal/docx</h2>
+      <p>Green, CHROM và POS là baseline truyền thống đã chạy. DeepPhys, PhysNet, TS-CAN và EfficientPhys mới là baseline tham chiếu trong docx, chưa có artifact hiện tại, nên chưa được đưa vào bảng metric. Khi các task sau chạy model học sâu, report phải bổ sung cùng bảng so sánh MAE/RMSE/Pearson/SNR và ghi rõ protocol.</p>
+    </section>
+
+    <section class="card">
+      <h2>Kết luận cuối</h2>
+      <div class="callout good"><strong>Task 2 đạt vai trò baseline.</strong> POS là baseline tốt nhất trên test split; Green dùng được nhưng kém ổn định hơn; CHROM hiện không phù hợp với cấu hình pipeline này. Các kết quả này là mốc so sánh cho Task 3 fusion và các task model nhẹ sau này.</div>
+    </section>
+  </main>
+</body>
+</html>

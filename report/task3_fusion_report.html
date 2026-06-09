@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task 3 Fusion Report</title>
+  <link rel="stylesheet" href="report.css">
+</head>
+<body>
+  <main class="report-page">
+    <header class="report-header">
+      <p class="eyebrow">AIrPPG / Task 3</p>
+      <h1>Multi-ROI Fusion Report</h1>
+      <p class="muted">Báo cáo này đánh giá liệu dùng nhiều ROI có tốt hơn single ROI không, và liệu quality-weighted fusion có vượt simple average fusion không. Input chỉ lấy từ artifact Signal extraction, không đọc raw video hoặc raw UBFC ground truth.</p>
+      <div class="badge-row">
+        <span class="badge">Schema: fusion_v1</span>
+        <span class="badge">Samples: 49/49 processed</span>
+        <span class="badge">Split chính: test</span>
+        <span class="badge">Methods: Green / CHROM / POS</span>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Metric đọc như thế nào?</h2>
+      <div class="grid grid-2">
+        <div class="callout"><strong>MAE ↓</strong><br>Sai số tuyệt đối trung bình. Đây là metric chính để nói method có đo HR sát ground truth không. Ví dụ POS quality-weighted MAE 1.64 BPM nghĩa là trung bình lệch khoảng 1.64 nhịp/phút.</div>
+        <div class="callout"><strong>RMSE ↓</strong><br>Phạt lỗi lớn mạnh hơn MAE. Nếu RMSE tăng nhiều khi MAE không tăng nhiều, strategy có một số window fail nặng.</div>
+        <div class="callout"><strong>Pearson r ↑</strong><br>Đo mức dự đoán đi cùng xu hướng ground truth. Có thể Pearson tốt nhưng MAE vẫn cao nếu dự đoán đúng trend nhưng bị bias.</div>
+        <div class="callout"><strong>SNR ↑</strong><br>Đo độ rõ tín hiệu rPPG trong HR band. SNR tốt hỗ trợ confidence, nhưng không thay thế MAE/RMSE vì peak rõ vẫn có thể là peak sai.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Phương pháp so sánh</h2>
+      <div class="grid grid-3">
+        <div class="callout"><strong>Single ROI</strong><br>Chỉ dùng một vùng: forehead, left_cheek hoặc right_cheek. Đây là baseline đúng để kiểm tra việc phụ thuộc vào một vùng mặt có yếu không.</div>
+        <div class="callout good"><strong>Average fusion</strong><br>Lấy trung bình tín hiệu 3 ROI rồi estimate HR. Cách này giảm nhiễu cục bộ nếu mỗi ROI có lỗi khác nhau.</div>
+        <div class="callout warn"><strong>Quality-weighted fusion</strong><br>Mỗi window/method gán weight ROI dựa trên valid ratio, signal std, dominant power ratio, SNR-like và disagreement. Ý tưởng là tin ROI sạch hơn, nhưng score thủ công có thể chọn nhầm peak nhiễu.</div>
+      </div>
+      <p class="small muted" style="margin-top:12px"><strong>Lưu ý baseline:</strong> <code>signal_extraction_baseline</code> là baseline Task 2 đã average ROI, không phải single ROI. Nó chỉ dùng để kiểm tra Task 3 reproduce Task 2; so sánh nghiên cứu chính là <code>single_*</code> vs <code>average_fusion</code> vs <code>quality_weighted_fusion</code>.</p>
+    </section>
+
+    <section class="card">
+      <h2>Kết luận nhanh</h2>
+      <div class="grid grid-3">
+        <div class="kpi"><div class="kpi-label">Green tốt nhất</div><div class="kpi-value">Average</div><div class="kpi-note">MAE 10.24 BPM; tốt hơn từng single ROI. Multi-ROI average có lợi.</div></div>
+        <div class="kpi"><div class="kpi-label">POS tốt nhất</div><div class="kpi-value">Weighted</div><div class="kpi-note">MAE 1.64 BPM; chỉ nhỉnh hơn average 1.66 BPM rất nhẹ.</div></div>
+        <div class="kpi"><div class="kpi-label">CHROM</div><div class="kpi-value">Yếu</div><div class="kpi-note">MAE test quanh 46-49 BPM; kết quả fusion trên CHROM không có ý nghĩa tích cực.</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Biểu đồ MAE chính</h2>
+      <figure class="figure">
+        <img src="assets/task3_test_mae.png" alt="Test MAE chart">
+        <figcaption><strong>Diễn giải:</strong> Với Green, average fusion giảm MAE từ single ROI tốt nhất 13.82 xuống 10.24 BPM, chứng tỏ gộp nhiều ROI giúp giảm lỗi. Với POS, average fusion 1.66 BPM và quality-weighted 1.64 BPM đều tốt hơn các single ROI, nhưng weighted chỉ cải thiện rất nhỏ. Với CHROM, single forehead 46.06 BPM lại tốt hơn fusion; do CHROM đã lỗi lớn, fusion không cứu được method nền.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>Bảng test split</h2>
+      <div class="grid grid-3">
+        <div class="fusion-method-card"><h3>Green</h3><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>n windows</th></tr></thead><tbody><tr><td>Single forehead</td><td>14.35</td><td>18.92</td><td>0.237</td><td>-5.02</td><td>206</td></tr><tr><td>Single left cheek</td><td>13.82</td><td>17.82</td><td>0.348</td><td>-3.63</td><td>206</td></tr><tr><td>Single right cheek</td><td>15.68</td><td>19.28</td><td>0.156</td><td>-3.50</td><td>206</td></tr><tr class="highlight"><td>Average fusion</td><td>10.24</td><td>12.09</td><td>0.519</td><td>-2.48</td><td>206</td></tr><tr><td>Quality-weighted</td><td>11.69</td><td>15.59</td><td>0.407</td><td>-2.45</td><td>206</td></tr><tr><td>Task 2 avg baseline</td><td>10.24</td><td>12.09</td><td>0.519</td><td>-2.48</td><td>206</td></tr></tbody></table></div></div>
+        <div class="fusion-method-card"><h3>CHROM</h3><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>n windows</th></tr></thead><tbody><tr class="highlight"><td>Single forehead</td><td>46.06</td><td>46.23</td><td>0.148</td><td>-13.34</td><td>206</td></tr><tr><td>Single left cheek</td><td>46.88</td><td>47.10</td><td>-0.017</td><td>-13.59</td><td>206</td></tr><tr><td>Single right cheek</td><td>47.91</td><td>48.04</td><td>0.123</td><td>-12.94</td><td>206</td></tr><tr><td>Average fusion</td><td>48.66</td><td>48.81</td><td>-0.284</td><td>-12.49</td><td>206</td></tr><tr><td>Quality-weighted</td><td>48.32</td><td>48.48</td><td>-0.319</td><td>-12.59</td><td>206</td></tr><tr><td>Task 2 avg baseline</td><td>48.66</td><td>48.81</td><td>-0.284</td><td>-12.49</td><td>206</td></tr></tbody></table></div></div>
+        <div class="fusion-method-card"><h3>POS</h3><div class="table-wrap"><table><thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th><th>SNR</th><th>n windows</th></tr></thead><tbody><tr><td>Single forehead</td><td>1.80</td><td>2.33</td><td>0.423</td><td>0.92</td><td>206</td></tr><tr><td>Single left cheek</td><td>3.23</td><td>5.45</td><td>0.415</td><td>-0.34</td><td>206</td></tr><tr><td>Single right cheek</td><td>2.79</td><td>5.16</td><td>0.369</td><td>0.88</td><td>206</td></tr><tr><td>Average fusion</td><td>1.66</td><td>2.12</td><td>0.467</td><td>2.06</td><td>206</td></tr><tr class="highlight"><td>Quality-weighted</td><td>1.64</td><td>2.10</td><td>0.466</td><td>2.86</td><td>206</td></tr><tr><td>Task 2 avg baseline</td><td>1.66</td><td>2.12</td><td>0.467</td><td>2.06</td><td>206</td></tr></tbody></table></div></div>
+      </div>
+      <p class="small muted" style="margin-top:12px">Task 2 avg baseline gần trùng average fusion vì cả hai đều average ROI. Đây là expected behavior, không phải mất đường trên biểu đồ.</p>
+    </section>
+
+    <section class="card">
+      <h2>RMSE và Pearson</h2>
+      <figure class="figure">
+        <img src="assets/task3_test_rmse_pearson.png" alt="Test RMSE and Pearson chart">
+        <figcaption><strong>Diễn giải:</strong> Green average fusion giảm RMSE mạnh so với single ROI, nghĩa là không chỉ giảm lỗi trung bình mà còn giảm các lỗi lớn. POS average/weighted có RMSE thấp nhất và Pearson khoảng 0.46, cho thấy vừa sát BPM vừa theo trend tương đối. CHROM có Pearson âm ở average/weighted, nghĩa là không theo ground truth; do đó không nên dùng CHROM để chứng minh fusion.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>Ví dụ HR trace và ROI weights</h2>
+      <figure class="figure">
+        <img src="assets/task3_sample_visualization.png" alt="Sample fusion visualization">
+        <figcaption><strong>Diễn giải:</strong> Trên ví dụ này, Signal baseline và Average fusion gần như trùng nhau vì cùng là average ROI. Quality-weighted khác ở vài window do weight ROI thay đổi. Biểu đồ dưới là weight của 3 ROI cho method Green: left_cheek chiếm trọng số cao nhất, right_cheek đứng sau, forehead thấp nhất. Weight tổng luôn bằng 1 ở mỗi window.</figcaption>
+      </figure>
+    </section>
+
+    <section class="card">
+      <h2>Nhận xét theo câu hỏi nghiên cứu</h2>
+      <div class="grid grid-2">
+        <div class="callout good"><strong>Multi-ROI average có ích.</strong><br>Green và POS trên test tốt hơn từng ROI đơn lẻ. Điều này phù hợp giả thuyết trong proposal: một ROI có thể bị bóng/tóc/motion, nên average nhiều vùng giúp giảm nhiễu cục bộ.</div>
+        <div class="callout warn"><strong>Quality weighting chưa ổn định.</strong><br>POS nhỉnh hơn average rất nhẹ, nhưng Green tệ hơn average. Lý do khả dĩ: quality score hiện tại ưu tiên peak/SNR cục bộ; peak rõ chưa chắc là peak HR đúng.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Đối chiếu baseline/paper trong proposal</h2>
+      <ul class="fusion-reference-list">
+        <li><strong>Green / CHROM / POS</strong> đã chạy trong Task 2-3. POS đang tốt nhất trên test split; CHROM rất kém ở protocol hiện tại.</li>
+        <li><strong>DeepPhys, PhysNet, TS-CAN, EfficientPhys</strong> mới là baseline tham chiếu trong proposal/docx, chưa chạy trong artifact hiện tại.</li>
+        <li><strong>So sánh hợp lệ hiện tại:</strong> nội bộ trên UBFC-rPPG giữa single ROI, average fusion, quality-weighted fusion với cùng HR windows và cùng ground truth align.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Kết luận cuối</h2>
+      <div class="callout good"><strong>Task 3 trả lời được câu hỏi chính:</strong> multi-ROI average giúp rõ với Green/POS so với single ROI; signal_extraction_baseline không phải single ROI mà là duplicate của average fusion; quality-weighted fusion hiện chưa đủ ổn định để xem là cải tiến chắc chắn. Hướng tiếp theo nên cải thiện quality score bằng motion/landmark stability và dùng confidence score để phát hiện window có khả năng sai.</div>
+    </section>
+  </main>
+</body>
+</html>

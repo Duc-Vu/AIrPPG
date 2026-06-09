@@ -1,0 +1,60 @@
+{
+  "schema_version": "preprocessing_roi_v1",
+  "dataset_name": "UBFC-rPPG",
+  "video": {
+    "path": "D:\\Workspace\\FPTspace\\Kỳ 5\\DSR\\lightweight_rppg\\datasets\\UBFC_DATASET\\DATASET_1\\12-gt\\vid-040.avi",
+    "fps": 28.671786,
+    "frame_count": 2388,
+    "width": 640,
+    "height": 480,
+    "duration_sec": 83.28745199200357
+  },
+  "config": {
+    "target_fps": null,
+    "resize_width": 640,
+    "max_frames": null,
+    "save_overlay_video": false,
+    "overlay_sample_count": 8,
+    "min_roi_area_px": 100.0,
+    "schema_version": "preprocessing_roi_v1"
+  },
+  "roi_names": [
+    "forehead",
+    "left_cheek",
+    "right_cheek"
+  ],
+  "processed_frame_count": 2388,
+  "valid_frame_count": 2388,
+  "invalid_frame_count": 0,
+  "failure_counts": {},
+  "ground_truth": {
+    "available": true,
+    "schema_version": "preprocessing_ground_truth_v1",
+    "source_format": "ubfc_dataset_1_gtdump_xmp",
+    "units": {
+      "timestamps": "seconds",
+      "heart_rate_bpm": "beats_per_minute",
+      "ppg_signal": "arbitrary_unit",
+      "ppg_timestamps": "seconds",
+      "spo2_percent": "percent"
+    },
+    "sample_counts": {
+      "timestamps": 5193,
+      "heart_rate_bpm": 5193,
+      "ppg_signal": 5193,
+      "ppg_timestamps": 5193,
+      "spo2_percent": 5193
+    },
+    "missing_fields": [],
+    "notes": [
+      "DATASET_1 gtdump.xmp columns are timestamp_ms, heart_rate_bpm, spo2_percent, ppg_signal."
+    ],
+    "source_relpath": "datasets/UBFC_DATASET/DATASET_1/12-gt/gtdump.xmp"
+  },
+  "artifacts": {
+    "roi_npz": "roi_data.npz",
+    "metadata_json": "metadata.json",
+    "ground_truth_npz": "ground_truth.npz",
+    "overlay_samples_dir": "overlay_samples"
+  }
+}

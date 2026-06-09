@@ -1,5 +1,5 @@
 [project]
-name = "airppg"
+name = "ightweight-rppg"
 version = "0.1.0"
 description = "Lightweight multi-ROI rPPG experiments for webcam videos."
 readme = "README.md"
@@ -22,9 +22,17 @@ dev = [
     "pytest>=8.0.0",
 ]
 
-[tool.uv]
-package = false
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/airppg"]
+
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

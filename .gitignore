@@ -226,5 +226,4 @@ __marimo__/
 .streamlit/secrets.toml
 
 AGENTS.md
-docs/
 datasets

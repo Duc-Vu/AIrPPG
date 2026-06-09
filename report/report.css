@@ -1,0 +1,129 @@
+/* ==============================
+   Shared report foundation
+   Reuse these classes across all experiment reports.
+   ============================== */
+:root {
+  --bg: #f7f8fb;
+  --panel: #ffffff;
+  --ink: #172033;
+  --muted: #647084;
+  --line: #d9deea;
+  --brand: #275efe;
+  --good: #16794a;
+  --warn: #a15c00;
+  --bad: #a52626;
+  --shadow: 0 14px 40px rgb(23 32 51 / 8%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.report-page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 56px;
+}
+
+.report-header,
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.report-header { padding: 28px 32px; margin-bottom: 20px; }
+.card { padding: 24px; margin: 18px 0; }
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--brand);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3 { line-height: 1.15; margin: 0 0 12px; }
+h1 { font-size: clamp(2rem, 4vw, 3rem); }
+h2 { font-size: 1.45rem; }
+h3 { font-size: 1.05rem; }
+p { margin: 0 0 12px; }
+
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.kpi {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fbfcff;
+}
+.kpi-label { color: var(--muted); font-size: 0.86rem; }
+.kpi-value { font-size: 1.6rem; font-weight: 800; margin-top: 4px; }
+.kpi-note { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+th { background: #f0f3fa; font-weight: 800; }
+tr.highlight td { background: #eef8f2; color: #0f5e38; font-weight: 700; }
+
+.figure { margin: 0; }
+.figure img {
+  width: 100%;
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: white;
+}
+figcaption { color: var(--muted); font-size: 0.88rem; margin-top: 8px; }
+
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #2442ad;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.callout {
+  border-left: 4px solid var(--brand);
+  background: #eef3ff;
+  padding: 14px 16px;
+  border-radius: 12px;
+}
+.callout.good { border-left-color: var(--good); background: #edf9f3; }
+.callout.warn { border-left-color: var(--warn); background: #fff6e8; }
+
+@media (max-width: 820px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .report-header, .card { padding: 20px; }
+}
+
+/* ==============================
+   Task 3 fusion report specific
+   Keep these names scoped to fusion reports.
+   ============================== */
+.fusion-best { color: var(--good); font-weight: 800; }
+.fusion-weak { color: var(--bad); font-weight: 800; }
+.fusion-method-card h3 { margin-bottom: 8px; }
+.fusion-method-card ul { margin: 8px 0 0 18px; padding: 0; }
+.fusion-reference-list { margin: 8px 0 0 18px; padding: 0; }
+.fusion-reference-list li { margin-bottom: 6px; }

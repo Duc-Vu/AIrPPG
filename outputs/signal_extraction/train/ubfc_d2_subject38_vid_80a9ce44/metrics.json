@@ -1,0 +1,30 @@
+{
+  "schema_version": "signal_extraction_rppg_v1",
+  "sample_id": "ubfc_d2_subject38_vid_80a9ce44",
+  "metrics": {
+    "green": {
+      "mae_bpm": 1.718954819899339,
+      "rmse_bpm": 2.7730634429175254,
+      "pearson_r": 0.660659840402421,
+      "bias_bpm": -1.0745362501878004,
+      "snr_db": 3.287894178634711,
+      "n_windows": 39
+    },
+    "chrom": {
+      "mae_bpm": 60.02240968361879,
+      "rmse_bpm": 61.736867152186505,
+      "pearson_r": -0.17076633722890378,
+      "bias_bpm": -60.02240968361879,
+      "snr_db": -11.817837435285977,
+      "n_windows": 39
+    },
+    "pos": {
+      "mae_bpm": 1.6087904710036058,
+      "rmse_bpm": 2.555791693268251,
+      "pearson_r": 0.6912338134609716,
+      "bias_bpm": -0.7669822497245593,
+      "snr_db": 5.629339354056915,
+      "n_windows": 39
+    }
+  }
+}
