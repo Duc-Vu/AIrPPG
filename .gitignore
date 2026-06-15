@@ -210,6 +210,8 @@ artifacts/
 models/*.task
 *_overlay.mp4
 *_roi_overlay.mp4
+outputs/
+.tmp_*
 
 # Ruff stuff:
 .ruff_cache/
