@@ -5,7 +5,8 @@ AIrPPG là dự án thực nghiệm rPPG đa ROI để ước lượng nhịp ti
 - **Task 1 - Preprocessing**: đọc video UBFC-rPPG, detect Face Mesh, tạo ROI trán/má trái/má phải, giữ timeline và lưu artifact frame/ROI/ground truth.
 - **Task 2 - Signal extraction**: đọc output Task 1, trích xuất RGB/rPPG theo ROI, chạy Green/CHROM/POS, align ground truth và tạo baseline metric.
 - **Task 3 - Multi-ROI fusion**: đọc output Task 2, so sánh single ROI, average fusion và quality-weighted fusion; đây là task hiện đã có report chi tiết.
-- **Task 4 - Lightweight model**: task kế tiếp, dùng signal/window từ Task 2/3 để huấn luyện mô hình nhẹ như Tiny CNN hoặc TCN và so sánh với baseline truyền thống/fusion.
+- **Task 4 - Lightweight model**: huấn luyện Tiny CNN 1D và Small TCN trên FFT spectrum features từ sliding window của Task 2/3; so sánh với baseline truyền thống và fusion trên cùng protocol. Schema: `modeling_v1`. Output: `outputs/modeling/`.
+
 
 Dataset chính: **UBFC-rPPG**. Dataset không được commit vào repository.
 

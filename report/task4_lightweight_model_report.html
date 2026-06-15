@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task 4 Lightweight Model Report — AIrPPG</title>
+  <link rel="stylesheet" href="report.css">
+  <style>
+    .model-best { color: var(--good); font-weight: 800; }
+    .model-note  { color: var(--warn); font-weight: 700; }
+    .model-arch-card { border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: #fbfcff; }
+    .model-arch-card pre { margin: 8px 0 0; font-size: 0.82rem; background: #f0f3fa; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    .result-row-best td { background: #eef8f2; color: #0f5e38; font-weight: 700; }
+    .result-row-model td { background: #f0f3ff; }
+  </style>
+</head>
+<body>
+  <main class="report-page">
+
+    <!-- ─── HEADER ─────────────────────────────────────────────────── -->
+    <header class="report-header">
+      <p class="eyebrow">AIrPPG / Task 4</p>
+      <h1>Lightweight Model Report</h1>
+      <p class="muted">
+        Task 4 huấn luyện Tiny CNN 1D và Small TCN để dự đoán heart rate
+        theo sliding window từ rPPG signal đã trích xuất ở Task 2/3.
+        Mục tiêu: đánh giá mô hình học sâu nhẹ có vượt baseline truyền thống
+        (Green/CHROM/POS) và multi-ROI fusion hay không, trên cùng split/protocol UBFC-rPPG.
+        <br><strong>Kết quả được báo cáo trung thực kể cả khi model không vượt baseline.</strong>
+      </p>
+      <div class="badge-row">
+        <span class="badge">Schema: modeling_v1</span>
+        <span class="badge">Samples: 49 (train 39 / val 5 / test 5)</span>
+        <span class="badge">Train windows: 1 468 | Val: 186 | Test: 206</span>
+        <span class="badge">Framework: PyTorch 2.11 CPU</span>
+        <span class="badge">Dataset: UBFC-rPPG</span>
+      </div>
+    </header>
+
+    <!-- ─── METRIC GUIDE ──────────────────────────────────────────── -->
+    <section class="card">
+      <h2>Metric đọc như thế nào?</h2>
+      <div class="grid grid-2">
+        <div class="callout"><strong>MAE ↓</strong><br>Sai số tuyệt đối trung bình (bpm). Metric chính. Thấp hơn = tốt hơn.</div>
+        <div class="callout"><strong>RMSE ↓</strong><br>Phạt lỗi lớn mạnh hơn MAE. Nếu RMSE tăng nhiều nhưng MAE không, model có vài window fail nặng.</div>
+        <div class="callout"><strong>Pearson r ↑</strong><br>Tương quan trend giữa dự đoán và GT. Cao = model theo trend đúng, nhưng vẫn có thể bị bias.</div>
+        <div class="callout"><strong>Bias ↓ (gần 0)</strong><br>Sai lệch có hướng trung bình. Âm = model underpredict, dương = overpredict.</div>
+      </div>
+    </section>
+
+    <!-- ─── INPUT FEATURE ─────────────────────────────────────────── -->
+    <section class="card">
+      <h2>Input feature design</h2>
+      <p>
+        Mỗi sliding window trong Task 2/3 có khoảng <strong>860 frames</strong>
+        (~30 giây ở FPS ≈ 28.67). Dùng raw signal 860 điểm làm input CNN là
+        không khả thi vì: (1) quá lớn, (2) window size thay đổi theo FPS mỗi video.
+      </p>
+      <p>
+        <strong>Giải pháp:</strong> Với mỗi window, tính <strong>FFT power spectrum</strong>
+        trong HR band [42–210 bpm] của rPPG signal, rồi resample thành vector cố định
+        <code>n_bins = 64</code> bins. Đây là input shape <code>(C, 64)</code> không phụ
+        thuộc FPS. Mỗi bin ~ 2.6 bpm.
+      </p>
+      <div class="grid grid-3">
+        <div class="callout">
+          <strong>pos_spectrum (C=1)</strong><br>
+          FFT của POS signal (average-ROI, Task 2). POS là baseline tốt nhất Task 2.
+        </div>
+        <div class="callout good">
+          <strong>fused_spectrum (C=1)</strong><br>
+          FFT của average-fused POS signal (Task 3). Tín hiệu ổn định hơn do multi-ROI.
+        </div>
+        <div class="callout">
+          <strong>multi_channel_spectrum (C=3)</strong><br>
+          Stack FFT của Green, CHROM, POS từ average-fused signal. 3 channels độc lập.
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:12px">
+        <strong>Normalization:</strong> Mean/std fit trên <em>train split</em> theo từng bin,
+        apply cho val và test. Không có data leakage. Params lưu trong
+        <code>checkpoints/&lt;run&gt;/config.json</code>.
+      </p>
+    </section>
+
+    <!-- ─── MODEL ARCHITECTURE ───────────────────────────────────── -->
+    <section class="card">
+      <h2>Kiến trúc mô hình</h2>
+      <div class="grid grid-2">
+        <div class="model-arch-card">
+          <h3>TinyCNN1D — 22 385 params</h3>
+          <p class="small muted">Input: (B, C, 64) → Output: (B, 1) scalar HR bpm</p>
+          <pre>Conv1d(C→16, k=5, pad=2) → BN → ReLU
+Conv1d(16→32, k=5, pad=2) → BN → ReLU → MaxPool1d(2)
+Conv1d(32→32, k=3, pad=1) → BN → ReLU → AvgPool(8)
+Flatten(256) → Linear(→64) → ReLU → Dropout(0.3)
+Linear(64→1)  ← regression head</pre>
+          <p class="small muted" style="margin-top:8px">
+            Inference: &lt;1 ms/window (CPU). Phù hợp real-time.
+          </p>
+        </div>
+        <div class="model-arch-card">
+          <h3>SmallTCN — 25 217 params</h3>
+          <p class="small muted">Input: (B, C, 64) → Output: (B, 1) scalar HR bpm</p>
+          <pre>Input proj: Conv1d(C→32) → BN → ReLU
+Block 1: DilatedCausalConv(32, dil=1) + residual
+Block 2: DilatedCausalConv(32, dil=2) + residual
+Block 3: DilatedCausalConv(32, dil=4) + residual
+Block 4: DilatedCausalConv(32, dil=8) + residual
+AdaptiveAvgPool(1) → Flatten → Linear(32→1)</pre>
+          <p class="small muted" style="margin-top:8px">
+            Receptive field rộng hơn TinyCNN → lý thuyết bắt được pattern tần số dài hơn.
+          </p>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:12px">
+        <strong>Loss:</strong> Smooth L1 (Huber) — ít nhạy với outlier window hơn MSE.
+        <strong>Optimizer:</strong> Adam lr=1e-3, weight_decay=1e-4.
+        <strong>Early stopping:</strong> patience=30 epochs theo val_mae_bpm.
+        <strong>Seed:</strong> 42.
+      </p>
+    </section>
+
+    <!-- ─── TRAINING RESULTS ─────────────────────────────────────── -->
+    <section class="card">
+      <h2>Kết quả huấn luyện (4 runs)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th><th>Strategy</th><th>Channels</th><th>Params</th>
+              <th>Best epoch</th><th>Best val_MAE</th>
+              <th>Test MAE ↓</th><th>Test RMSE ↓</th><th>Test Pearson ↑</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="result-row-model">
+              <td>TinyCNN1D</td><td>pos_spectrum</td><td>1</td><td>22 385</td>
+              <td>33</td><td>12.98 bpm</td>
+              <td>5.53 bpm</td><td>6.63 bpm</td><td>~0.16</td>
+            </tr>
+            <tr class="result-row-model">
+              <td>TinyCNN1D</td><td>fused_spectrum</td><td>1</td><td>22 385</td>
+              <td>41</td><td>12.37 bpm</td>
+              <td>4.09 bpm</td><td>5.18 bpm</td><td>~0.20</td>
+            </tr>
+            <tr class="result-row-model">
+              <td>TinyCNN1D</td><td>multi_channel</td><td>3</td><td>22 545</td>
+              <td>39</td><td>15.17 bpm</td>
+              <td>4.64 bpm</td><td>5.65 bpm</td><td>~0.25</td>
+            </tr>
+            <tr class="result-row-model">
+              <td><strong>SmallTCN</strong></td><td><strong>pos_spectrum</strong></td><td>1</td><td>25 217</td>
+              <td>62</td><td>13.11 bpm</td>
+              <td><strong>3.59 bpm</strong></td><td><strong>4.74 bpm</strong></td><td>~0.10</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" style="margin-top:10px">
+        SmallTCN+pos_spectrum đạt MAE thấp nhất trên test (3.59 bpm), nhờ receptive field
+        dài hơn qua dilated convolution. fused_spectrum cải thiện TinyCNN đáng kể so với pos_spectrum.
+      </p>
+    </section>
+
+    <!-- ─── COMPARISON TABLE ─────────────────────────────────────── -->
+    <section class="card">
+      <h2>So sánh với baseline Task 2 và Task 3 (test split)</h2>
+      <div class="grid grid-3">
+
+        <!-- GREEN -->
+        <div>
+          <h3>Green method</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th></tr></thead>
+              <tbody>
+                <tr><td>single_forehead</td><td>14.35</td><td>18.92</td><td>0.237</td></tr>
+                <tr><td>single_left_cheek</td><td>13.82</td><td>17.82</td><td>0.348</td></tr>
+                <tr><td>single_right_cheek</td><td>15.68</td><td>19.28</td><td>0.156</td></tr>
+                <tr class="highlight"><td>average_fusion</td><td>10.24</td><td>12.09</td><td>0.519</td></tr>
+                <tr><td>quality_weighted</td><td>11.69</td><td>15.59</td><td>0.407</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CHROM -->
+        <div>
+          <h3>CHROM method</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th></tr></thead>
+              <tbody>
+                <tr class="highlight"><td>single_forehead</td><td>46.06</td><td>46.23</td><td>0.148</td></tr>
+                <tr><td>average_fusion</td><td>48.66</td><td>48.81</td><td>-0.284</td></tr>
+                <tr><td>quality_weighted</td><td>48.32</td><td>48.48</td><td>-0.319</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- POS -->
+        <div>
+          <h3>POS method — baseline tốt nhất</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Strategy</th><th>MAE ↓</th><th>RMSE ↓</th><th>Pearson ↑</th></tr></thead>
+              <tbody>
+                <tr><td>single_forehead</td><td>1.80</td><td>2.33</td><td>0.423</td></tr>
+                <tr><td>single_left_cheek</td><td>3.23</td><td>5.45</td><td>0.415</td></tr>
+                <tr><td>single_right_cheek</td><td>2.79</td><td>5.16</td><td>0.369</td></tr>
+                <tr class="result-row-best"><td><strong>average_fusion ★</strong></td><td><strong>1.66</strong></td><td><strong>2.12</strong></td><td><strong>0.467</strong></td></tr>
+                <tr class="result-row-best"><td><strong>quality_weighted ★</strong></td><td><strong>1.64</strong></td><td><strong>2.10</strong></td><td><strong>0.466</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model summary row -->
+      <div style="margin-top:16px">
+        <h3>Model Task 4 (tất cả runs, test split)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Model</th><th>Strategy</th><th>Test MAE ↓</th><th>Test RMSE ↓</th><th>So với POS avg_fusion</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>SmallTCN</td><td>pos_spectrum</td><td>3.59 bpm</td><td>4.74 bpm</td><td>+1.93 bpm ↑ worse</td></tr>
+              <tr><td>TinyCNN</td><td>fused_spectrum</td><td>4.09 bpm</td><td>5.18 bpm</td><td>+2.43 bpm ↑ worse</td></tr>
+              <tr><td>TinyCNN</td><td>multi_channel</td><td>4.64 bpm</td><td>5.65 bpm</td><td>+2.98 bpm ↑ worse</td></tr>
+              <tr><td>TinyCNN</td><td>pos_spectrum</td><td>5.53 bpm</td><td>6.63 bpm</td><td>+3.87 bpm ↑ worse</td></tr>
+              <tr class="result-row-best"><td><strong>POS quality_weighted (Task 3)</strong></td><td>—</td><td><strong>1.64 bpm</strong></td><td><strong>2.10 bpm</strong></td><td>—</td></tr>
+              <tr class="result-row-best"><td><strong>POS average_fusion (Task 3)</strong></td><td>—</td><td><strong>1.66 bpm</strong></td><td><strong>2.12 bpm</strong></td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── VISUALIZATION ASSETS ─────────────────────────────────── -->
+    <section class="card">
+      <h2>Training curves</h2>
+      <div class="grid grid-2">
+        <figure class="figure">
+          <img src="assets/tiny_cnn_pos_spectrum_curves.png"
+               alt="TinyCNN pos_spectrum training curves"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div style="display:none; padding:20px; background:#f0f3fa; border-radius:8px; color:#647084">
+            [training_curves.png — xem tại outputs/modeling/checkpoints/tiny_cnn_pos_spectrum/training_curves.png]
+          </div>
+          <figcaption><strong>TinyCNN + pos_spectrum:</strong> Early stop epoch 33.
+            Train loss giảm nhanh nhưng val_mae plateau sớm (~12-13 bpm), dấu hiệu của
+            overfitting nhẹ do dataset nhỏ (1 468 train windows).
+          </figcaption>
+        </figure>
+        <figure class="figure">
+          <img src="assets/small_tcn_pos_spectrum_curves.png"
+               alt="SmallTCN pos_spectrum training curves"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div style="display:none; padding:20px; background:#f0f3fa; border-radius:8px; color:#647084">
+            [training_curves.png — xem tại outputs/modeling/checkpoints/small_tcn_pos_spectrum/training_curves.png]
+          </div>
+          <figcaption><strong>SmallTCN + pos_spectrum:</strong> Early stop epoch 62.
+            Hội tụ chậm hơn TinyCNN (dilated conv cần nhiều epoch hơn), nhưng đạt test MAE
+            thấp nhất trong 4 runs (3.59 bpm).
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Comparison bar charts (test split)</h2>
+      <div class="grid grid-2">
+        <figure class="figure">
+          <img src="assets/task4_tiny_cnn_multi_channel_mae_bpm.png"
+               alt="MAE comparison bar chart"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div style="display:none; padding:20px; background:#f0f3fa; border-radius:8px; color:#647084">
+            [task4_*_mae_bpm.png — xem tại report/assets/]
+          </div>
+          <figcaption><strong>Test MAE (bpm):</strong> Model Task 4 (đỏ) so với baseline Task 3
+            (xanh lam) và Task 2 (xám). POS average/quality_weighted fusion vẫn tốt nhất rõ ràng.
+            Model cải thiện đáng kể so với Green/CHROM baseline, nhưng chưa bằng POS.
+          </figcaption>
+        </figure>
+        <figure class="figure">
+          <img src="assets/task4_tiny_cnn_multi_channel_rmse_bpm.png"
+               alt="RMSE comparison bar chart"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div style="display:none; padding:20px; background:#f0f3fa; border-radius:8px; color:#647084">
+            [task4_*_rmse_bpm.png — xem tại report/assets/]
+          </div>
+          <figcaption><strong>Test RMSE (bpm):</strong> Tương tự MAE. Model có RMSE cao hơn
+            POS fusion, nhưng thấp hơn nhiều so với CHROM và hầu hết Green variants.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ─── ANALYSIS ─────────────────────────────────────────────── -->
+    <section class="card">
+      <h2>Phân tích nguyên nhân model không vượt baseline</h2>
+      <div class="grid grid-2">
+        <div class="callout warn">
+          <strong>Dataset quá nhỏ.</strong><br>
+          1 468 train windows từ 39 video ngắn. Mỗi video UBFC có khoảng 37 windows
+          (30s/window, step 1s, ~70s video), nhưng nhiều video ngắn chỉ có 13 windows.
+          CNN cần tối thiểu vài nghìn samples đa dạng để học tốt.
+        </div>
+        <div class="callout warn">
+          <strong>Feature quá dễ cho baseline.</strong><br>
+          FFT spectrum trong HR band là input của model, nhưng cũng là thông tin mà
+          baseline dùng trực tiếp: peak của FFT spectrum = HR estimate. Baseline không
+          cần "học" — nó đã tối ưu trên feature này. Model CNN học thêm không có lợi thế.
+        </div>
+        <div class="callout">
+          <strong>Val split chỉ có 5 video.</strong><br>
+          Early stopping theo val_mae trên 5 sample là không ổn định. Một video "khó"
+          có thể làm val_mae dao động và stop quá sớm hoặc quá muộn.
+        </div>
+        <div class="callout">
+          <strong>Không có data augmentation.</strong><br>
+          Với dataset nhỏ, augmentation (noise, time shift, amplitude jitter trên spectrum)
+          có thể giúp regularize mô hình. Hiện tại chỉ dùng Dropout(0.3).
+        </div>
+      </div>
+      <p style="margin-top:12px">
+        <strong>SmallTCN tốt hơn TinyCNN:</strong> Receptive field dài hơn (dilated conv 1,2,4,8)
+        cho phép model học pattern phổ tần số phức tạp hơn trong 64 bins. Điều này gợi ý
+        temporal/spectral structure có ích, nhưng benefit bị giới hạn bởi dataset size.
+      </p>
+      <p>
+        <strong>fused_spectrum tốt hơn pos_spectrum (với TinyCNN):</strong> Average-fused signal
+        giảm nhiễu cục bộ, làm cho FFT spectrum rõ hơn → model dễ learn hơn. Điều này
+        consistent với kết quả Task 3.
+      </p>
+    </section>
+
+    <!-- ─── CONCLUSION ────────────────────────────────────────────── -->
+    <section class="card">
+      <h2>Kết luận</h2>
+      <div class="callout" style="margin-bottom:14px">
+        <strong>Model nhẹ CHƯA cải thiện accuracy so với baseline POS truyền thống.</strong><br>
+        Trên test split UBFC-rPPG:
+        <ul style="margin:8px 0 0 18px">
+          <li>Baseline POS quality_weighted_fusion (Task 3): <strong>MAE = 1.64 bpm</strong> — tốt nhất</li>
+          <li>SmallTCN + pos_spectrum (Task 4, best model): <strong>MAE = 3.59 bpm</strong></li>
+          <li>TinyCNN + fused_spectrum: <strong>MAE = 4.09 bpm</strong></li>
+          <li>Chênh lệch: model kém hơn baseline tốt nhất ~2 bpm (~120%)</li>
+        </ul>
+      </div>
+      <div class="callout good">
+        <strong>Điểm tích cực:</strong><br>
+        <ul style="margin:8px 0 0 18px">
+          <li>Model vượt rõ Green method average_fusion (10.24 bpm) và toàn bộ CHROM variants (~46-48 bpm)</li>
+          <li>fused_spectrum tốt hơn pos_spectrum đơn thuần — consistent với kết luận Task 3 về fusion</li>
+          <li>SmallTCN tốt hơn TinyCNN — dilated conv có ích hơn standard pooling cho spectral features</li>
+          <li>Pipeline end-to-end hoạt động: dataset → feature → train → eval → manifest đầy đủ</li>
+        </ul>
+      </div>
+      <div class="callout warn" style="margin-top:12px">
+        <strong>Điều kiện để model có thể vượt baseline:</strong><br>
+        <ul style="margin:8px 0 0 18px">
+          <li>Dataset lớn hơn đáng kể (MAHNOB-HCI, MMSE-HR, >200 subjects)</li>
+          <li>Input là raw signal segment (tốt nhất ~300 frames), không phải pre-computed FFT</li>
+          <li>Architecture end-to-end học feature từ raw RGB (DeepPhys, TS-CAN style)</li>
+          <li>Augmentation: noise injection, signal scaling, temporal jitter</li>
+          <li>Cross-val hoặc leave-one-out thay vì val=5 video</li>
+        </ul>
+      </div>
+      <p style="margin-top:12px" class="small muted">
+        <strong>Kết quả âm có giá trị nghiên cứu:</strong> Confirms rằng FFT-based peak detection
+        (baseline) là đối thủ khó trên UBFC-rPPG với protocol 30s window. Model CNN không có
+        thông tin thêm khi input đã là spectrum — đây là bài học thiết kế feature quan trọng.
+      </p>
+    </section>
+
+    <!-- ─── OUTPUT STRUCTURE ─────────────────────────────────────── -->
+    <section class="card">
+      <h2>Output artifacts</h2>
+      <div class="callout">
+        <strong>Schema version:</strong> <code>modeling_v1</code><br><br>
+        <strong>Cấu trúc:</strong>
+        <pre style="font-size:0.82rem; margin:8px 0 0; background:#f0f3fa; padding:10px; border-radius:8px">outputs/modeling/
+  modeling_manifest.json          ← 49 samples, schema modeling_v1
+  modeling_metrics_summary.csv    ← per-sample rows
+  modeling_aggregate_summary.csv  ← mean/std per split
+  comparison_table_test.csv       ← model vs Task2/3 baseline (test)
+  checkpoints/
+    tiny_cnn_pos_spectrum/        best_model.pt, training_history.csv, config.json
+    tiny_cnn_fused_spectrum/      …
+    tiny_cnn_multi_channel/       …
+    small_tcn_pos_spectrum/       …
+  train|val|test/&lt;sample_id&gt;/
+    model_predictions.npz         schema_version, hr_timestamps, predicted_hr, …
+    model_metrics.json
+    model_metrics.csv
+    model_visualization.png</pre>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

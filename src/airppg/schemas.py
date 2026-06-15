@@ -5,6 +5,8 @@ PREPROCESSING_GT_SCHEMA_VERSION = "preprocessing_ground_truth_v1"
 PREPROCESSING_MANIFEST_SCHEMA_VERSION = "preprocessing_dataset_manifest_v1"
 SIGNAL_EXTRACTION_SCHEMA_VERSION = "signal_extraction_rppg_v1"
 FUSION_SCHEMA_VERSION = "fusion_v1"
+MODELING_SCHEMA_VERSION = "modeling_v1"
+
 
 ROI_NAMES = ("forehead", "left_cheek", "right_cheek")
 METHOD_NAMES = ("green", "chrom", "pos")
